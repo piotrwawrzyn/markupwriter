@@ -2,7 +2,9 @@ const {
   removeAllChildren,
   stringToElement,
   elementToString,
-  plainTextify
+  plainTextify,
+  addStyles,
+  clearTextContent
 } = require('./utils');
 
 const Node = require('./Node');
@@ -10,7 +12,6 @@ const Node = require('./Node');
 const defaultValuesHandler = require('./configDefaultValuesHandler');
 
 class MarkupWriter {
-  separator = '|';
   root = null;
 
   /**
@@ -33,6 +34,18 @@ class MarkupWriter {
 
     // Pass config to Node class
     Node.config = this.config;
+
+    // Inject needed styles
+    const {
+      cursorOptions: { color, animationSpeed }
+    } = this.config;
+
+    addStyles(
+      `@keyframes blinking-cursor {
+        from, to { color: transparent }
+        50% { color: ${color} }
+      } .markupwriter-cursor {animation: blinking-cursor ${animationSpeed}s step-end infinite reverse; font-weight: bold } `
+    );
   }
 
   changeLastChildren(parent, newChildren) {
@@ -70,39 +83,77 @@ class MarkupWriter {
     });
   }
 
-  displayHtmlText(htmlTextArray, newElementIndex) {
+  /**
+   * Sets up a cursor that is rendered in the dom just once (only left and right hand of it rerenders constantly)
+   */
+  prepareStaticCursor(cursorString) {
+    const { textDumpElement } = this;
+
+    const beforeCursorClass = 'markupwriter-before-cursor';
+    const afterCursorClass = 'markupwriter-after-cursor';
+
+    textDumpElement.insertAdjacentHTML(
+      'beforeend',
+      `<span class="${beforeCursorClass}"></span>`
+    );
+
+    textDumpElement.insertAdjacentHTML('beforeend', cursorString);
+
+    textDumpElement.insertAdjacentHTML(
+      'beforeend',
+      `<span class="${afterCursorClass}"></span>`
+    );
+
+    this.beforeCursorElement = document.querySelector(`.${beforeCursorClass}`);
+    this.afterCursorElement = document.querySelector(`.${afterCursorClass}`);
+
+    this.staticCursorReady = true;
+  }
+
+  renderHtmlText(htmlTextArray, newElementIndex) {
+    const { textDumpElement } = this;
+
     if (this.config.displayCursor) {
-      const { cursorCharacter } = this.config;
-      const cursorCode = `<span>${cursorCharacter}</span>`;
+      const {
+        cursorOptions: { cursorString, isStatic }
+      } = this.config;
 
       const beforeCursorArr = htmlTextArray.slice(1, newElementIndex + 1);
       const afterCursorArr = htmlTextArray.slice(newElementIndex + 1);
+      const leftHand = plainTextify(beforeCursorArr.join(''));
+      const rightHand = plainTextify(afterCursorArr.join(''));
 
-      const code =
-        plainTextify(beforeCursorArr.join('')) +
-        cursorCode +
-        plainTextify(afterCursorArr.join(''));
+      if (isStatic) {
+        if (!this.staticCursorReady) this.prepareStaticCursor(cursorString);
 
-      this.textDumpElement.insertAdjacentHTML('beforeend', `<p>${code}</p>`);
+        const { beforeCursorElement, afterCursorElement } = this;
+
+        clearTextContent([beforeCursorElement, afterCursorElement]);
+
+        beforeCursorElement.insertAdjacentHTML('beforeend', leftHand);
+        afterCursorElement.insertAdjacentHTML('beforeend', rightHand);
+      } else {
+        clearTextContent(textDumpElement);
+        textDumpElement.insertAdjacentHTML(
+          'beforeend',
+          leftHand + cursorString + rightHand
+        );
+      }
     } else {
-      this.textDumpElement.textContent = '';
-      this.textDumpElement.insertAdjacentHTML(
-        'beforeend',
-        htmlTextArray.join('')
-      );
+      // No cursor needed, just join the array and dump it
+      textDumpElement.insertAdjacentHTML('beforeend', htmlTextArray.join(''));
     }
   }
 
   onChange(htmlTextArray, newElementIndex) {
-    this.textDumpElement.textContent = '';
-    this.displayHtmlText(htmlTextArray, newElementIndex);
+    this.renderHtmlText(htmlTextArray, newElementIndex);
   }
 
   start() {
     const { htmlDumpElement, textDumpElement, htmlString } = this;
     const elementToRender = stringToElement(htmlString);
     this.prepareRenderingStructure(elementToRender);
-    this.root.renderWithChildren(this.onChange);
+    this.root.buildWithChildren(this.onChange);
   }
 }
 

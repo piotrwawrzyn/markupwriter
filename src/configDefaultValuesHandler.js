@@ -1,12 +1,28 @@
-const ConfigProperties = require('./enums/ConfigProperties');
-const { CHAR_INTERVAL, DISPLAY_CURSOR, CURSOR_CHARACTER } = ConfigProperties;
+const ConfigProperty = require('./enums/ConfigProperty');
+const CursorOption = require('./enums/CursorOption');
+const {
+  CHAR_INTERVAL,
+  DISPLAY_CURSOR,
+  CHARACTERS_PER_TEXT_LINE,
+  CURSOR_OPTIONS
+} = ConfigProperty;
+
+const { COLOR, ANIMATION_SPEED, IS_STATIC, CURSOR_STRING } = CursorOption;
 
 // Handler to supply default values for missing properties in config object provided by a user
 
-const defaultValuesHandler = {
+const configDefaultValuesHandler = {
   get: (target, name) => {
     if (target.hasOwnProperty(name)) {
-      return target[name];
+      switch (name) {
+        case CURSOR_OPTIONS: {
+          return new Proxy(target[name], cursorOptionsDefaultValuesHandler);
+        }
+
+        default: {
+          return target[name];
+        }
+      }
     } else {
       switch (name) {
         case CHAR_INTERVAL: {
@@ -17,12 +33,38 @@ const defaultValuesHandler = {
           return true;
         }
 
-        case CURSOR_CHARACTER: {
-          return '|';
+        case CHARACTERS_PER_TEXT_LINE: {
+          return 50;
         }
       }
     }
   }
 };
 
-module.exports = defaultValuesHandler;
+const cursorOptionsDefaultValuesHandler = {
+  get: (target, name) => {
+    if (target.hasOwnProperty(name)) {
+      return target[name];
+    } else {
+      switch (name) {
+        case CURSOR_STRING: {
+          return '<span class="markupwriter-cursor">|</span>';
+        }
+
+        case COLOR: {
+          return 'rgb(252, 186, 3)';
+        }
+
+        case ANIMATION_SPEED: {
+          return 1;
+        }
+
+        case IS_STATIC: {
+          return false;
+        }
+      }
+    }
+  }
+};
+
+module.exports = configDefaultValuesHandler;

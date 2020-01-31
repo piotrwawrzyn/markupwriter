@@ -1,8 +1,8 @@
 const { multiplyString } = require('./utils');
+const NodeType = require('./enums/NodeType');
 
 let htmlTextOutput = [];
 let unclosedTags = 0;
-const NUMBER_OF_CHARS_BEFORE_NEW_LINE_ATTEMPT = 50;
 
 class Node {
   children = [];
@@ -17,6 +17,10 @@ class Node {
     this.children.push(node);
   }
 
+  /**
+   * Updates array with new character / string
+   * @param {string} valueToPush - character / string to be added to builded array
+   */
   updateOutput(valueToPush) {
     if (unclosedTags === 0) {
       htmlTextOutput.push(valueToPush);
@@ -37,21 +41,29 @@ class Node {
       setTimeout(async () => {
         const indexOfNewElement = this.updateOutput(character);
         resolve(indexOfNewElement);
-      }, charInterval || defaultValues.charInterval)
+      }, charInterval)
     );
   }
 
-  async renderWithChildren(callback) {
-    await this.render(callback);
+  /**
+   * Builds current Node and all children recursively
+   * @param {funcion} callback - function called when there is a change in the generated output
+   */
+  async buildWithChildren(callback) {
+    await this.build(callback);
 
     for (const child of this.children) {
       unclosedTags++;
-      await child.renderWithChildren(callback);
+      await child.buildWithChildren(callback);
       unclosedTags--;
     }
   }
 
-  async render(callback) {
+  /**
+   * Builds current Node
+   * @param {function} callback - function called when there is a change in the generated output
+   */
+  async build(callback) {
     return new Promise(async resolve => {
       let closingTag = false;
       let newLineRequest = false;
@@ -65,7 +77,10 @@ class Node {
 
       for (let i = 0; i < this.valueArray.length; i++) {
         if (closingTag) {
+          // Next character will be composed of necessary intent and closing tag
           currentCharacter = intent + this.value.slice(i);
+
+          // Add new line first
           await this.addCharacter('\r\n');
         } else currentCharacter = this.valueArray[i];
 
@@ -86,8 +101,8 @@ class Node {
         if (currentCharacter === '>') closingTag = true;
 
         // New lines handling for blocks of text
-        if (this.nodeType === 3) {
-          if (charsInCurrentLine > NUMBER_OF_CHARS_BEFORE_NEW_LINE_ATTEMPT) {
+        if (this.nodeType === NodeType.TEXT_NODE) {
+          if (charsInCurrentLine > Node.config.charactersPerTextLine) {
             newLineRequest = true;
           } else {
             charsInCurrentLine++;

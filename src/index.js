@@ -16,9 +16,10 @@ const htmlString = `
 `;
 
 const config = {
-  charInterval: 90,
+  charInterval: 50,
   displayCursor: true,
-  cursorCharacter: '|'
+  charactersPerTextLine: 100,
+  cursorOptions: { animationSpeed: 0.3, isStatic: true }
 };
 
 const markupWriter = new MarkupWriter(

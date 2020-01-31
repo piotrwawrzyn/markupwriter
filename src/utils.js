@@ -55,5 +55,28 @@ module.exports = {
     }
 
     return multipliedString;
+  },
+  /**
+   * Add styles to document head
+   *
+   * @param {string} styles CSS string
+   */
+  addStyles(styles) {
+    const styleBlock = document.createElement('style');
+    styleBlock.appendChild(document.createTextNode(styles));
+    document.head.appendChild(styleBlock);
+  },
+  /**
+   * Clears text content of a single element or all elements in an array
+   * @param {HTMLElement | Array<HTMLElement>} toClear
+   */
+  clearTextContent(toClear) {
+    if (toClear.textContent) return (toClear.textContent = '');
+    else {
+      // Should be an array
+      for (const element of toClear) {
+        element.textContent = '';
+      }
+    }
   }
 };
