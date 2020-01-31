@@ -71,7 +71,7 @@ module.exports = {
    * @param {HTMLElement | Array<HTMLElement>} toClear
    */
   clearTextContent(toClear) {
-    if (toClear.textContent) return (toClear.textContent = '');
+    if (toClear.nodeType) return (toClear.textContent = '');
     else {
       // Should be an array
       for (const element of toClear) {
