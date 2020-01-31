@@ -1,13 +1,14 @@
 const {
   removeAllChildren,
   stringToElement,
-  elementToString,
-  plainTextify
+  elementToString
 } = require('./utils');
 
 const Node = require('./Node');
 
-class CodeWriter {
+const defaultValuesHandler = require('./configDefaultValuesHandler');
+
+class MarkupWriter {
   separator = '|';
   root = null;
 
@@ -16,15 +17,21 @@ class CodeWriter {
    * @param {HTMLElement} htmlDumpElement - container for html part of animation
    * @param {HTMLElement} textDumpElement - container for text part of animation
    * @param {string} htmlString - valid html string representing single node
+   * @param {object} config - configuration object
+   * @param {number} config.charInterval - interval between each character in ms
    */
-  constructor(htmlDumpElement, textDumpElement, htmlString) {
+  constructor(htmlDumpElement, textDumpElement, htmlString, config = {}) {
     this.htmlDumpElement = htmlDumpElement;
     this.textDumpElement = textDumpElement;
     this.htmlString = htmlString;
+    this.config = new Proxy(config, defaultValuesHandler);
 
     this.onChange = this.onChange.bind(this);
 
     this.textDumpElement.style.whiteSpace = 'pre';
+
+    // Pass config to Node class
+    Node.config = this.config;
   }
 
   changeLastChildren(parent, newChildren) {
@@ -67,7 +74,6 @@ class CodeWriter {
   }
 
   onChange(markupArray) {
-    console.log(markupArray);
     this.textDumpElement.textContent = markupArray.join('');
   }
 
@@ -79,4 +85,4 @@ class CodeWriter {
   }
 }
 
-module.exports = CodeWriter;
+module.exports = MarkupWriter;

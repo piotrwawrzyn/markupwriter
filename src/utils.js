@@ -1,4 +1,8 @@
 module.exports = {
+  /**
+   *  Returns copy of supplied html node without any children
+   * @param {HTMLElement} el - html element to remove the children from
+   */
   removeAllChildren: el => {
     const copiedEl = el.cloneNode(true);
 
@@ -27,6 +31,12 @@ module.exports = {
     if (htmlElement.nodeType === Node.TEXT_NODE) return htmlElement.wholeText;
     return htmlElement.outerHTML;
   },
+  /**
+   * Wrap a string into 2 other strings
+   * @param {string} string - string to be wrapped
+   * @param {string} before - string before
+   * @param {string} after - string after
+   */
   wrapString(string, before, after) {
     return before + string + after;
   },

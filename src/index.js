@@ -14,10 +14,15 @@ const htmlString = `
 </div>
 `;
 
+const config = {
+  charInterval: 90
+};
+
 const markupWriter = new MarkupWriter(
   htmlDumpElement,
   textDumpElement,
-  htmlString
+  htmlString,
+  config
 );
 
 markupWriter.start();

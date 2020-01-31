@@ -20,12 +20,14 @@ class Node {
     }
   }
 
-  addCharacter(character, speed = 90) {
+  addCharacter(character) {
+    const { charInterval } = Node.config;
+
     return new Promise(resolve =>
       setTimeout(async () => {
         this.updateOutput(character);
         resolve();
-      }, speed)
+      }, charInterval || defaultValues.charInterval)
     );
   }
 
