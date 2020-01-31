@@ -45,6 +45,15 @@ module.exports = {
    * @param {string} string htmlish string
    */
   plainTextify(string) {
-    return string.replace('<', '&lt;').replace('>', '&gt;');
+    return string.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  },
+  multiplyString(string, times) {
+    let multipliedString = '';
+
+    for (let i = 0; i < times; i++) {
+      multipliedString += string;
+    }
+
+    return multipliedString;
   }
 };

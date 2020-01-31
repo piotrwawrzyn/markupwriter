@@ -1,7 +1,8 @@
 const {
   removeAllChildren,
   stringToElement,
-  elementToString
+  elementToString,
+  plainTextify
 } = require('./utils');
 
 const Node = require('./Node');
@@ -55,7 +56,7 @@ class MarkupWriter {
     const element = removeAllChildren(htmlElement);
     const elementAsString = elementToString(element);
 
-    const nodeObject = new Node(elementAsString);
+    const nodeObject = new Node(elementAsString, element.nodeType);
 
     if (this.lastParent) this.lastParent.addChildren(nodeObject);
     else this.root = nodeObject;
@@ -69,12 +70,32 @@ class MarkupWriter {
     });
   }
 
-  removeSeparator(string) {
-    return string.replace(this.separator, '');
+  displayHtmlText(htmlTextArray, newElementIndex) {
+    if (this.config.displayCursor) {
+      const { cursorCharacter } = this.config;
+      const cursorCode = `<span>${cursorCharacter}</span>`;
+
+      const beforeCursorArr = htmlTextArray.slice(1, newElementIndex + 1);
+      const afterCursorArr = htmlTextArray.slice(newElementIndex + 1);
+
+      const code =
+        plainTextify(beforeCursorArr.join('')) +
+        cursorCode +
+        plainTextify(afterCursorArr.join(''));
+
+      this.textDumpElement.insertAdjacentHTML('beforeend', `<p>${code}</p>`);
+    } else {
+      this.textDumpElement.textContent = '';
+      this.textDumpElement.insertAdjacentHTML(
+        'beforeend',
+        htmlTextArray.join('')
+      );
+    }
   }
 
-  onChange(markupArray) {
-    this.textDumpElement.textContent = markupArray.join('');
+  onChange(htmlTextArray, newElementIndex) {
+    this.textDumpElement.textContent = '';
+    this.displayHtmlText(htmlTextArray, newElementIndex);
   }
 
   start() {
