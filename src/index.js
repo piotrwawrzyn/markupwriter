@@ -16,10 +16,11 @@ const htmlString = `
 `;
 
 const config = {
-  charInterval: 70,
+  charInterval: 50,
   displayCursor: true,
   charactersPerTextLine: 60,
-  cursorOptions: { animationSpeed: 0.3, isStatic: false }
+  cursorOptions: { animationSpeed: 1, isStatic: true, color: 'pink' },
+  pauseAfterTagClose: 180
 };
 
 const markupWriter = new MarkupWriter(

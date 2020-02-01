@@ -118,7 +118,7 @@ class MarkupWriter {
         cursorOptions: { cursorString, isStatic }
       } = this.config;
 
-      const beforeCursorArr = htmlTextArray.slice(1, newElementIndex + 1);
+      const beforeCursorArr = htmlTextArray.slice(0, newElementIndex + 1);
       const afterCursorArr = htmlTextArray.slice(newElementIndex + 1);
       const leftHand = plainTextify(beforeCursorArr.join(''));
       const rightHand = plainTextify(afterCursorArr.join(''));
@@ -141,7 +141,11 @@ class MarkupWriter {
       }
     } else {
       // No cursor needed, just join the array and dump it
-      textDumpElement.insertAdjacentHTML('beforeend', htmlTextArray.join(''));
+      clearTextContent(textDumpElement);
+      textDumpElement.insertAdjacentHTML(
+        'beforeend',
+        plainTextify(htmlTextArray.join(''))
+      );
     }
   }
 
@@ -152,7 +156,9 @@ class MarkupWriter {
   start() {
     const { htmlDumpElement, textDumpElement, htmlString } = this;
     const elementToRender = stringToElement(htmlString);
+
     this.prepareRenderingStructure(elementToRender);
+    console.log(this.root);
     this.root.buildWithChildren(this.onChange);
   }
 }

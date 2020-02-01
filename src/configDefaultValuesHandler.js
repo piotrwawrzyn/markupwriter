@@ -4,7 +4,9 @@ const {
   CHAR_INTERVAL,
   DISPLAY_CURSOR,
   CHARACTERS_PER_TEXT_LINE,
-  CURSOR_OPTIONS
+  CURSOR_OPTIONS,
+  PAUSE_BEFORE_TAG_OPEN,
+  PAUSE_AFTER_TAG_CLOSE
 } = ConfigProperty;
 
 const { COLOR, ANIMATION_SPEED, IS_STATIC, CURSOR_STRING } = CursorOption;
@@ -35,6 +37,14 @@ const configDefaultValuesHandler = {
 
         case CHARACTERS_PER_TEXT_LINE: {
           return 50;
+        }
+
+        case PAUSE_BEFORE_TAG_OPEN: {
+          return 500;
+        }
+
+        case PAUSE_AFTER_TAG_CLOSE: {
+          return 180;
         }
       }
     }

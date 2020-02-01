@@ -1,5 +1,5 @@
-const { multiplyString } = require('./utils');
-const NodeType = require('./enums/NodeType');
+const { multiplyString, sleep } = require('./utils');
+const VisibleNodeType = require('./enums/VisibleNodeType');
 
 let htmlTextOutput = [];
 let unclosedTags = 0;
@@ -7,9 +7,9 @@ let unclosedTags = 0;
 class Node {
   children = [];
 
-  constructor(value, nodeType) {
-    this.value = value;
-    this.valueArray = value.split('');
+  constructor(nodeString, nodeType) {
+    this.nodeString = nodeString;
+    this.nodeStringArray = nodeString.split('');
     this.nodeType = nodeType;
   }
 
@@ -34,14 +34,17 @@ class Node {
     }
   }
 
-  addCharacter(character) {
+  addCharacter(character, callback, longWait) {
     const { charInterval } = Node.config;
+    const interval = longWait ? charInterval * 4 : charInterval;
 
     return new Promise(resolve =>
       setTimeout(async () => {
         const indexOfNewElement = this.updateOutput(character);
+        callback(htmlTextOutput, indexOfNewElement);
+
         resolve(indexOfNewElement);
-      }, charInterval)
+      }, interval)
     );
   }
 
@@ -64,6 +67,11 @@ class Node {
    * @param {function} callback - function called when there is a change in the generated output
    */
   async build(callback) {
+    const {
+      charactersPerTextLine,
+      pauseBeforeTagOpen,
+      pauseAfterTagClose
+    } = Node.config;
     return new Promise(async resolve => {
       let closingTag = false;
       let newLineRequest = false;
@@ -73,16 +81,22 @@ class Node {
 
       let intent = multiplyString('    ', unclosedTags);
 
-      await this.addCharacter(intent);
+      // If not a root node
+      if (htmlTextOutput.length) {
+        // Add new line with necessary intent
+        await this.addCharacter('\r\n' + intent, callback);
 
-      for (let i = 0; i < this.valueArray.length; i++) {
+        // Sleep before tag opens
+        await sleep(pauseBeforeTagOpen);
+      }
+
+      for (let i = 0; i < this.nodeStringArray.length; i++) {
         if (closingTag) {
-          // Next character will be composed of necessary intent and closing tag
-          currentCharacter = intent + this.value.slice(i);
+          // Next string pushed to the array is the whole closing tag
+          currentCharacter = this.nodeString.slice(i);
 
-          // Add new line first
-          await this.addCharacter('\r\n');
-        } else currentCharacter = this.valueArray[i];
+          await this.addCharacter('\r\n' + intent, callback);
+        } else currentCharacter = this.nodeStringArray[i];
 
         if (newLineRequest && currentCharacter === ' ') {
           newLineRequest = false;
@@ -92,25 +106,24 @@ class Node {
             currentCharacter + '\r\n' + multiplyString('    ', unclosedTags);
         }
 
-        const indexOfNewElement = await this.addCharacter(currentCharacter);
+        await this.addCharacter(currentCharacter, callback);
 
-        callback(htmlTextOutput, indexOfNewElement);
+        // Sleep after tag closes
+        if (closingTag) await sleep(pauseAfterTagClose);
 
         if (closingTag) break;
 
         if (currentCharacter === '>') closingTag = true;
 
         // New lines handling for blocks of text
-        if (this.nodeType === NodeType.TEXT_NODE) {
-          if (charsInCurrentLine > Node.config.charactersPerTextLine) {
+        if (this.nodeType === VisibleNodeType.TEXT_NODE) {
+          if (charsInCurrentLine > charactersPerTextLine) {
             newLineRequest = true;
           } else {
             charsInCurrentLine++;
           }
         }
       }
-
-      this.addCharacter('\r\n');
 
       resolve();
     });
