@@ -4,7 +4,8 @@ const ConfigProperty = {
   CHARACTERS_PER_TEXT_LINE: 'charactersPerTextLine',
   CURSOR_OPTIONS: 'cursorOptions',
   PAUSE_BEFORE_TAG_OPEN: 'pauseBeforeTagOpen',
-  PAUSE_AFTER_TAG_CLOSE: 'pauseAfterTagClose'
+  PAUSE_AFTER_TAG_CLOSE: 'pauseAfterTagClose',
+  INCREASING_PACE: 'increasingPace'
 };
 
 module.exports = ConfigProperty;

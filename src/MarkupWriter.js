@@ -154,11 +154,9 @@ class MarkupWriter {
   }
 
   start() {
-    const { htmlDumpElement, textDumpElement, htmlString } = this;
+    const { htmlString } = this;
     const elementToRender = stringToElement(htmlString);
-
     this.prepareRenderingStructure(elementToRender);
-    console.log(this.root);
     this.root.buildWithChildren(this.onChange);
   }
 }

@@ -11,8 +11,44 @@ class Node {
     this.nodeString = nodeString;
     this.nodeStringArray = nodeString.split('');
     this.nodeType = nodeType;
+
+    if (nodeType === VisibleNodeType.TEXT_NODE) {
+      this.shiftAndPopWhitespaces();
+    }
+
+    // Set initial interval between characters as per config
+    const { charInterval } = Node.config;
+    this.currentCharacterInterval = charInterval;
   }
 
+  /**
+   * Remove all whitespaces from the beginning and end of the Node
+   * 1st iteration - use shift until non whitespace character is met
+   * 2nd iteration - use pop until non whitespace character is met
+   */
+  shiftAndPopWhitespaces() {
+    const { nodeString, nodeStringArray } = this;
+    const nodeStringArrayDouble = nodeString.split('');
+
+    for (let i = 0; i < 2; i++) {
+      for (const element of nodeStringArrayDouble) {
+        // If whitespace OR new line character then shift or pop depending on the current iteration
+        if (element.trim() === '' || element === '\n') {
+          if (!i) nodeStringArray.shift();
+          else nodeStringArray.pop();
+        } else {
+          break;
+        }
+      }
+
+      nodeStringArrayDouble.reverse();
+    }
+  }
+
+  /**
+   * Add new child to the array of children
+   * @param {Node} node
+   */
   addChildren(node) {
     this.children.push(node);
   }
@@ -34,9 +70,21 @@ class Node {
     }
   }
 
-  addCharacter(character, callback, longWait) {
-    const { charInterval } = Node.config;
-    const interval = longWait ? charInterval * 4 : charInterval;
+  addCharacter(character, callback) {
+    const {
+      increasingPace: { use, multiplier, maximumTimesChange },
+      charInterval
+    } = Node.config;
+
+    // Handle possible usage of increasing pace effect
+    if (use) {
+      if (
+        this.currentCharacterInterval > charInterval / maximumTimesChange &&
+        this.currentCharacterInterval < charInterval * maximumTimesChange
+      )
+        this.currentCharacterInterval =
+          this.currentCharacterInterval * multiplier;
+    }
 
     return new Promise(resolve =>
       setTimeout(async () => {
@@ -44,7 +92,7 @@ class Node {
         callback(htmlTextOutput, indexOfNewElement);
 
         resolve(indexOfNewElement);
-      }, interval)
+      }, this.currentCharacterInterval)
     );
   }
 
@@ -55,7 +103,9 @@ class Node {
   async buildWithChildren(callback) {
     await this.build(callback);
 
-    for (const child of this.children) {
+    const { children } = this;
+
+    for (const child of children) {
       unclosedTags++;
       await child.buildWithChildren(callback);
       unclosedTags--;
@@ -76,9 +126,7 @@ class Node {
       let closingTag = false;
       let newLineRequest = false;
       let charsInCurrentLine = 0;
-
       let currentCharacter;
-
       let intent = multiplyString('    ', unclosedTags);
 
       // If not a root node
