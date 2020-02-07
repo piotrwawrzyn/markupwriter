@@ -5,7 +5,8 @@ const ConfigProperty = {
   CURSOR_OPTIONS: 'cursorOptions',
   PAUSE_BEFORE_TAG_OPEN: 'pauseBeforeTagOpen',
   PAUSE_AFTER_TAG_CLOSE: 'pauseAfterTagClose',
-  INCREASING_PACE: 'increasingPace'
+  INCREASING_PACE: 'increasingPace',
+  ON_FINISH: 'onFinish'
 };
 
 module.exports = ConfigProperty;

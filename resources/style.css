@@ -1,0 +1,107 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-family: 'Saira Stencil One', cursive;
+}
+
+.flexbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flexbox > * {
+  width: 50%;
+}
+
+#textDump {
+  padding: 1em;
+  border-left: 1px solid #1e1e1e;
+}
+
+.container,
+#textDump {
+  height: calc(100vh - 45px);
+}
+
+.container {
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 30%;
+  min-width: 200px;
+  padding: 0.5rem 1rem;
+}
+
+header {
+  width: 100%;
+  background: #1e1e1e;
+  position: relative;
+  min-height: 100px;
+}
+
+header h1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2.4rem;
+  text-transform: uppercase;
+}
+
+header h1 span:nth-child(2) {
+  font-size: 2.6rem;
+}
+
+.wave {
+  background-color: white;
+  background: url(/resources/wave.svg);
+  background-position: right;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 200px;
+}
+
+.pop {
+  -webkit-animation: text-shadow-pop-top 0.6s both;
+  animation: text-shadow-pop-top 0.6s both;
+}
+
+@-webkit-keyframes text-shadow-pop-top {
+  0% {
+    text-shadow: 0 0 #555555, 0 0 #555555, 0 0 #555555, 0 0 #555555, 0 0 #555555,
+      0 0 #555555, 0 0 #555555, 0 0 #555555;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    text-shadow: 0 -1px #555555, 0 -2px #555555, 0 -3px #555555, 0 -4px #555555,
+      0 -5px #555555, 0 -6px #555555, 0 -7px #555555, 0 -8px #555555;
+    -webkit-transform: translateY(8px);
+    transform: translateY(8px);
+  }
+}
+@keyframes text-shadow-pop-top {
+  0% {
+    text-shadow: 0 0 #555555, 0 0 #555555, 0 0 #555555, 0 0 #555555, 0 0 #555555,
+      0 0 #555555, 0 0 #555555, 0 0 #555555;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    text-shadow: 0 -1px #555555, 0 -2px #555555, 0 -3px #555555, 0 -4px #555555,
+      0 -5px #555555, 0 -6px #555555, 0 -7px #555555, 0 -8px #555555;
+    -webkit-transform: translateY(8px);
+    transform: translateY(8px);
+  }
+}

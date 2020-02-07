@@ -8,7 +8,8 @@ const {
   CURSOR_OPTIONS,
   PAUSE_BEFORE_TAG_OPEN,
   PAUSE_AFTER_TAG_CLOSE,
-  INCREASING_PACE
+  INCREASING_PACE,
+  ON_FINISH
 } = ConfigProperty;
 
 const { COLOR, ANIMATION_SPEED, IS_STATIC, CURSOR_STRING } = CursorOption;
@@ -65,6 +66,10 @@ const defaultValuesHandlers = {
           case INCREASING_PACE: {
             return new Proxy({}, increasingPaceOptions);
           }
+
+          case ON_FINISH: {
+            return () => {};
+          }
         }
       }
     }
@@ -85,7 +90,7 @@ const defaultValuesHandlers = {
           }
 
           case MULTIPLIER: {
-            return 0.992;
+            return 0.99;
           }
 
           case MAXIMUM_TIMES_CHANGE: {

@@ -81,5 +81,8 @@ module.exports = {
   },
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  },
+  removeWhitespaces(str) {
+    return str.replace(/^\s+|\s+$|\s+(?=\s)/g, '', '').trim();
   }
 };

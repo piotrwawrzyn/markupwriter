@@ -1,8 +1,9 @@
 const { multiplyString, sleep } = require('./utils');
 const VisibleNodeType = require('./enums/VisibleNodeType');
 
-let htmlTextOutput = [];
+let htmlStateArray = [];
 let unclosedTags = 0;
+let buildToEnd = false;
 
 class Node {
   children = [];
@@ -57,20 +58,20 @@ class Node {
    * Updates array with new character / string
    * @param {string} valueToPush - character / string to be added to builded array
    */
-  updateOutput(valueToPush) {
+  updateHtmlStateArray(valueToPush) {
     if (unclosedTags === 0) {
-      htmlTextOutput.push(valueToPush);
+      htmlStateArray.push(valueToPush);
 
-      return htmlTextOutput.length - 1;
+      return htmlStateArray.length - 1;
     } else {
-      const indexToPushAt = htmlTextOutput.length - unclosedTags * 2;
-      htmlTextOutput.splice(indexToPushAt, 0, valueToPush);
+      const indexToPushAt = htmlStateArray.length - unclosedTags * 2;
+      htmlStateArray.splice(indexToPushAt, 0, valueToPush);
 
       return indexToPushAt;
     }
   }
 
-  addCharacter(character, callback) {
+  addCharacter(character, callback, isValidHtml) {
     const {
       increasingPace: { use, multiplier, maximumTimesChange },
       charInterval
@@ -86,12 +87,19 @@ class Node {
           this.currentCharacterInterval * multiplier;
     }
 
+    const update = () => {
+      const indexOfNewElement = this.updateHtmlStateArray(character);
+      callback(htmlStateArray, indexOfNewElement, isValidHtml);
+
+      return indexOfNewElement;
+    };
+
+    // If set to finish instantly don't use promise at all
+    console.log(buildToEnd);
+    if (Node.buildToEnd) return update();
     return new Promise(resolve =>
       setTimeout(async () => {
-        const indexOfNewElement = this.updateOutput(character);
-        callback(htmlTextOutput, indexOfNewElement);
-
-        resolve(indexOfNewElement);
+        resolve(update());
       }, this.currentCharacterInterval)
     );
   }
@@ -130,7 +138,7 @@ class Node {
       let intent = multiplyString('    ', unclosedTags);
 
       // If not a root node
-      if (htmlTextOutput.length) {
+      if (htmlStateArray.length) {
         // Add new line with necessary intent
         await this.addCharacter('\r\n' + intent, callback);
 
@@ -143,7 +151,8 @@ class Node {
           // Next string pushed to the array is the whole closing tag
           currentCharacter = this.nodeString.slice(i);
 
-          await this.addCharacter('\r\n' + intent, callback);
+          if (this.children.length)
+            await this.addCharacter('\r\n' + intent, callback);
         } else currentCharacter = this.nodeStringArray[i];
 
         if (newLineRequest && currentCharacter === ' ') {
@@ -154,7 +163,11 @@ class Node {
             currentCharacter + '\r\n' + multiplyString('    ', unclosedTags);
         }
 
-        await this.addCharacter(currentCharacter, callback);
+        const isValidHtml =
+          this.nodeType === VisibleNodeType.TEXT_NODE ||
+          currentCharacter === '>';
+
+        await this.addCharacter(currentCharacter, callback, isValidHtml);
 
         // Sleep after tag closes
         if (closingTag) await sleep(pauseAfterTagClose);

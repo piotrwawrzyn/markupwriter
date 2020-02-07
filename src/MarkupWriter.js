@@ -4,7 +4,8 @@ const {
   elementToString,
   plainTextify,
   addStyles,
-  clearTextContent
+  clearTextContent,
+  removeWhitespaces
 } = require('./utils');
 
 const Node = require('./Node');
@@ -16,21 +17,26 @@ class MarkupWriter {
 
   /**
    * Constructor
-   * @param {HTMLElement} htmlDumpElement - container for html part of animation
-   * @param {HTMLElement} textDumpElement - container for text part of animation
+   * @param {HTMLElement} htmlCodeDumpElement - container for html part of animation
+   * @param {HTMLElement} htmlTextDumpElement - container for text part of animation
    * @param {string} htmlString - valid html string representing single node
    * @param {object} config - configuration object
    * @param {number} config.charInterval - interval between each character in ms
    */
-  constructor(htmlDumpElement, textDumpElement, htmlString, config = {}) {
-    this.htmlDumpElement = htmlDumpElement;
-    this.textDumpElement = textDumpElement;
+  constructor(
+    htmlCodeDumpElement,
+    htmlTextDumpElement,
+    htmlString,
+    config = {}
+  ) {
+    this.htmlCodeDumpElement = htmlCodeDumpElement;
+    this.htmlTextDumpElement = htmlTextDumpElement;
     this.htmlString = htmlString;
     this.config = new Proxy(config, defaultValuesHandler);
 
     this.onChange = this.onChange.bind(this);
 
-    this.textDumpElement.style.whiteSpace = 'pre';
+    this.htmlTextDumpElement.style.whiteSpace = 'pre';
 
     // Pass config to Node class
     Node.config = this.config;
@@ -87,7 +93,7 @@ class MarkupWriter {
    * Sets up a cursor that is rendered in the dom just once (only left and right hand of it rerenders constantly)
    */
   prepareStaticCursor(cursorString) {
-    const { textDumpElement } = this;
+    const { htmlTextDumpElement: textDumpElement } = this;
 
     const beforeCursorClass = 'markupwriter-before-cursor';
     const afterCursorClass = 'markupwriter-after-cursor';
@@ -110,16 +116,16 @@ class MarkupWriter {
     this.staticCursorReady = true;
   }
 
-  renderHtmlText(htmlTextArray, newElementIndex) {
-    const { textDumpElement } = this;
+  renderHtmlText(htmlStateArray, newElementIndex) {
+    const { htmlTextDumpElement: textDumpElement } = this;
 
     if (this.config.displayCursor) {
       const {
         cursorOptions: { cursorString, isStatic }
       } = this.config;
 
-      const beforeCursorArr = htmlTextArray.slice(0, newElementIndex + 1);
-      const afterCursorArr = htmlTextArray.slice(newElementIndex + 1);
+      const beforeCursorArr = htmlStateArray.slice(0, newElementIndex + 1);
+      const afterCursorArr = htmlStateArray.slice(newElementIndex + 1);
       const leftHand = plainTextify(beforeCursorArr.join(''));
       const rightHand = plainTextify(afterCursorArr.join(''));
 
@@ -144,20 +150,36 @@ class MarkupWriter {
       clearTextContent(textDumpElement);
       textDumpElement.insertAdjacentHTML(
         'beforeend',
-        plainTextify(htmlTextArray.join(''))
+        plainTextify(htmlStateArray.join(''))
       );
     }
   }
 
-  onChange(htmlTextArray, newElementIndex) {
-    this.renderHtmlText(htmlTextArray, newElementIndex);
+  renderToEnd() {
+    Node.buildToEnd = true;
+    Node.config.pauseAfterTagClose = 0;
+    Node.config.pauseBeforeTagOpen = 0;
   }
 
-  start() {
+  renderHtmlCode(htmlStateArray) {
+    const { htmlCodeDumpElement } = this;
+    const htmlCodeString = htmlStateArray.join('');
+    const withoutWhitespaces = removeWhitespaces(htmlCodeString);
+
+    htmlCodeDumpElement.innerHTML = withoutWhitespaces;
+  }
+
+  onChange(htmlStateArray, newElementIndex, isValidHtml) {
+    this.renderHtmlText(htmlStateArray, newElementIndex);
+    if (isValidHtml) this.renderHtmlCode(htmlStateArray);
+  }
+
+  async start() {
     const { htmlString } = this;
     const elementToRender = stringToElement(htmlString);
     this.prepareRenderingStructure(elementToRender);
-    this.root.buildWithChildren(this.onChange);
+    await this.root.buildWithChildren(this.onChange);
+    this.config.onFinish();
   }
 }
 

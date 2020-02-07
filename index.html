@@ -5,10 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>MarkupWriter Example</title>
+    <link rel="stylesheet" type="text/css" href="./resources/style.css" />
+    <link rel="stylesheet" type="text/css" href="./resources/top_bar.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div id="htmlDump"></div>
-    <div id="textDump" style="font-family: Consolas;"></div>
+    <div id="notification-bar" class="regular closable">
+      <div class="nb-content-wrapper">
+        <div class="nb-text-wrapper">
+          <div class="nb-headline-text">
+            <p>
+              <span>If you want to skip this annoying animation go ahead</span>
+            </p>
+          </div>
+        </div>
+        <a target="_blank" class="nb-cta nb-cta-button">
+          <div class="button-skip">
+            <p>Skip animation</p>
+          </div>
+        </a>
+      </div>
+      <div class="nb-close-wrapper">
+        <a class="icon-close">&#10006;</a>
+      </div>
+    </div>
+    <div class="flexbox">
+      <div id="htmlDump"></div>
+      <div id="textDump" style="font-family: Consolas;"></div>
+    </div>
     <script src="./build/bundle.js"></script>
   </body>
 </html>
