@@ -143,7 +143,7 @@ class Node {
         await this.addCharacter('\r\n' + intent, callback);
 
         // Sleep before tag opens
-        await sleep(pauseBeforeTagOpen);
+        if (!Node.buildToEnd) await sleep(pauseBeforeTagOpen);
       }
 
       for (let i = 0; i < this.nodeStringArray.length; i++) {
@@ -170,7 +170,7 @@ class Node {
         await this.addCharacter(currentCharacter, callback, isValidHtml);
 
         // Sleep after tag closes
-        if (closingTag) await sleep(pauseAfterTagClose);
+        if (closingTag && !Node.buildToEnd) await sleep(pauseAfterTagClose);
 
         if (closingTag) break;
 

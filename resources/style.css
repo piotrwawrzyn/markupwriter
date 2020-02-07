@@ -23,7 +23,6 @@ h1 {
   border-left: 1px solid #1e1e1e;
 }
 
-.container,
 #textDump {
   height: calc(100vh - 45px);
 }

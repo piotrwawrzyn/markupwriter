@@ -157,8 +157,6 @@ class MarkupWriter {
 
   renderToEnd() {
     Node.buildToEnd = true;
-    Node.config.pauseAfterTagClose = 0;
-    Node.config.pauseBeforeTagOpen = 0;
   }
 
   renderHtmlCode(htmlStateArray) {
