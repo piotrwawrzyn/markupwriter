@@ -1,22 +1,29 @@
 {
   "name": "markupwriter",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This little library allows you to visualize live coding of html snippets on a webpage. Handles both markup animation and real time showcasing of what the current code produces.",
+  "main": "./build/index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack --mode production"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {},
+  "keywords": [
+    "marukpwriter",
+    "animate",
+    "html",
+    "typewriter",
+    "markup"
+  ],
+  "author": "Piotr Wawrzynkiewicz",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/polyfill": "^7.8.3"
+  },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
     "@babel/core": "^7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "babel-loader": "^8.0.6",
-    "babel-polyfill": "^6.26.0"
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

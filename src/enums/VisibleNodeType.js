@@ -1,5 +1,5 @@
-const NodeType = {
+const VisibleNodeType = {
   TEXT_NODE: 3
 };
 
-module.exports = NodeType;
+export default VisibleNodeType;

@@ -1,12 +1,12 @@
 const path = require('path');
 
 const config = {
-  mode: 'development',
   watch: true,
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['./src/index.js'],
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build')
+    filename: 'index.js',
+    path: path.resolve(__dirname, 'build'),
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [

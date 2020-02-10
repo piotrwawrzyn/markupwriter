@@ -1,5 +1,5 @@
-const { multiplyString, sleep } = require('./utils');
-const VisibleNodeType = require('./enums/VisibleNodeType');
+import { multiplyString, sleep } from './utils';
+import VisibleNodeType from './enums/VisibleNodeType';
 
 let htmlStateArray = [];
 let unclosedTags = 0;
@@ -95,7 +95,6 @@ class Node {
     };
 
     // If set to finish instantly don't use promise at all
-    console.log(buildToEnd);
     if (Node.buildToEnd) return update();
     return new Promise(resolve =>
       setTimeout(async () => {
@@ -191,4 +190,4 @@ class Node {
   }
 }
 
-module.exports = Node;
+export default Node;

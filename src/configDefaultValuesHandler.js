@@ -1,6 +1,6 @@
-const ConfigProperty = require('./enums/ConfigProperty');
-const CursorOption = require('./enums/CursorOption');
-const IncreasingPaceOption = require('./enums/IncreasingPaceOption');
+import ConfigProperty from './enums/ConfigProperty';
+import CursorOption from './enums/CursorOption';
+import IncreasingPaceOption from './enums/IncreasingPaceOption';
 const {
   CHAR_INTERVAL,
   DISPLAY_CURSOR,
@@ -127,4 +127,4 @@ const defaultValuesHandlers = {
   }
 };
 
-module.exports = defaultValuesHandlers.main;
+export default defaultValuesHandlers.main;

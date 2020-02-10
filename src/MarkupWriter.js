@@ -1,4 +1,4 @@
-const {
+import {
   removeAllChildren,
   stringToElement,
   elementToString,
@@ -6,11 +6,10 @@ const {
   addStyles,
   clearTextContent,
   removeWhitespaces
-} = require('./utils');
+} from './utils';
 
-const Node = require('./Node');
-
-const defaultValuesHandler = require('./configDefaultValuesHandler');
+import Node from './Node';
+import defaultValuesHandler from './configDefaultValuesHandler';
 
 class MarkupWriter {
   root = null;
@@ -181,4 +180,4 @@ class MarkupWriter {
   }
 }
 
-module.exports = MarkupWriter;
+export default MarkupWriter;

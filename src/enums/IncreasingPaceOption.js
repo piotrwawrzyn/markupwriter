@@ -4,4 +4,4 @@ const IncreasingPaceOption = {
   MAXIMUM_TIMES_CHANGE: 'maximumTimesChange'
 };
 
-module.exports = IncreasingPaceOption;
+export default IncreasingPaceOption;

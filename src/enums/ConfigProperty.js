@@ -9,4 +9,4 @@ const ConfigProperty = {
   ON_FINISH: 'onFinish'
 };
 
-module.exports = ConfigProperty;
+export default ConfigProperty;

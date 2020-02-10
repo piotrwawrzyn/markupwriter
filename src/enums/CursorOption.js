@@ -5,4 +5,4 @@ const CursorOption = {
   IS_STATIC: 'isStatic'
 };
 
-module.exports = CursorOption;
+export default CursorOption;
