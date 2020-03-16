@@ -2,3 +2,4 @@
 webpack.config.js
 .gitignore
 .babelrc
+/.vscode

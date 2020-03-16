@@ -164,7 +164,8 @@ class Node {
 
         const isValidHtml =
           this.nodeType === VisibleNodeType.TEXT_NODE ||
-          currentCharacter === '>';
+          closingTag ||
+          (currentCharacter === '>' && i === this.nodeStringArray.length - 1);
 
         await this.addCharacter(currentCharacter, callback, isValidHtml);
 

@@ -10,6 +10,7 @@ import {
 
 import Node from './Node';
 import defaultValuesHandler from './configDefaultValuesHandler';
+import VisibleNodeType from './enums/VisibleNodeType';
 
 class MarkupWriter {
   root = null;
@@ -81,7 +82,10 @@ class MarkupWriter {
     htmlElement.childNodes.forEach(child => {
       this.lastParent = nodeObject;
 
-      if (child.nodeType !== 3 || child.textContent.trim()) {
+      if (
+        child.nodeType !== VisibleNodeType.TEXT_NODE ||
+        child.textContent.trim()
+      ) {
         this.prepareRenderingStructure(child);
       }
     });
@@ -160,6 +164,7 @@ class MarkupWriter {
   renderHtmlCode(htmlStateArray) {
     const { htmlCodeDumpElement } = this;
     const htmlCodeString = htmlStateArray.join('');
+    console.log(htmlCodeString);
     const withoutWhitespaces = removeWhitespaces(htmlCodeString);
 
     htmlCodeDumpElement.innerHTML = withoutWhitespaces;
