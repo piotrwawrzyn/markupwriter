@@ -20,7 +20,6 @@ class MarkupWriter {
    * @param {HTMLElement} htmlTextDumpElement - container for text part of animation
    * @param {string} htmlString - valid html string representing single node
    * @param {object} config - configuration object
-   * @param {number} config.charInterval - interval between each character in ms
    */
   constructor(
     htmlCodeDumpElement,
