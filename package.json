@@ -1,6 +1,6 @@
 {
   "name": "markupwriter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This little library allows you to visualize live coding of html snippets on a webpage. Handles both markup animation and real time showcasing of what the current code produces.",
   "main": "./build/index.js",
   "scripts": {
