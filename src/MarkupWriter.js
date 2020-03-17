@@ -164,7 +164,6 @@ class MarkupWriter {
   renderHtmlCode(htmlStateArray) {
     const { htmlCodeDumpElement } = this;
     const htmlCodeString = htmlStateArray.join('');
-    console.log(htmlCodeString);
     const withoutWhitespaces = removeWhitespaces(htmlCodeString);
 
     htmlCodeDumpElement.innerHTML = withoutWhitespaces;

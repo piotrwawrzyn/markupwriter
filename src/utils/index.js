@@ -1,3 +1,5 @@
+import VisibleNodeType from '../enums/VisibleNodeType';
+
 /**
  *  Returns copy of supplied html node without any children
  * @param {HTMLElement} el - html element to remove the children from

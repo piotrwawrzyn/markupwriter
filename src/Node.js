@@ -1,9 +1,12 @@
 import { multiplyString, sleep } from './utils';
 import VisibleNodeType from './enums/VisibleNodeType';
+import {
+  isStillWorthToSplit,
+  isSplitFriendlyCharacter
+} from './utils/lineSpliting';
 
 let htmlStateArray = [];
 let unclosedTags = 0;
-let buildToEnd = false;
 
 class Node {
   children = [];
@@ -125,7 +128,7 @@ class Node {
    */
   async build(callback) {
     const {
-      charactersPerTextLine,
+      charactersPerLine,
       pauseBeforeTagOpen,
       pauseAfterTagClose
     } = Node.config;
@@ -154,12 +157,26 @@ class Node {
             await this.addCharacter('\r\n' + intent, callback);
         } else currentCharacter = this.nodeStringArray[i];
 
-        if (newLineRequest && currentCharacter === ' ') {
-          newLineRequest = false;
-          charsInCurrentLine = 0;
+        if (newLineRequest) {
+          const splitFriendlyChar = isSplitFriendlyCharacter(
+            currentCharacter,
+            this.nodeType,
+            this.nodeStringArray,
+            i
+          );
 
-          currentCharacter =
-            currentCharacter + '\r\n' + multiplyString('    ', unclosedTags);
+          const stillWorth = isStillWorthToSplit(
+            i,
+            this.nodeStringArray.length
+          );
+
+          if (splitFriendlyChar && stillWorth) {
+            newLineRequest = false;
+            charsInCurrentLine = 0;
+
+            currentCharacter =
+              currentCharacter + '\r\n' + multiplyString('    ', unclosedTags);
+          }
         }
 
         const isValidHtml =
@@ -177,12 +194,10 @@ class Node {
         if (currentCharacter === '>') closingTag = true;
 
         // New lines handling for blocks of text
-        if (this.nodeType === VisibleNodeType.TEXT_NODE) {
-          if (charsInCurrentLine > charactersPerTextLine) {
-            newLineRequest = true;
-          } else {
-            charsInCurrentLine++;
-          }
+        if (charsInCurrentLine > charactersPerLine) {
+          newLineRequest = true;
+        } else {
+          charsInCurrentLine++;
         }
       }
 
