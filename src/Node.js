@@ -193,7 +193,6 @@ class Node {
 
         if (currentCharacter === '>') closingTag = true;
 
-        // New lines handling for blocks of text
         if (charsInCurrentLine > charactersPerLine) {
           newLineRequest = true;
         } else {
