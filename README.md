@@ -22,7 +22,7 @@ index.html
   </head>
   <body>
     <div class="rendered-html"></div>
-	<div class="raw-html"></div>
+    <div class="raw-html"></div>
   </body>
 </html>
 ```
@@ -68,6 +68,7 @@ As a fourth argument to the MarkupWriter constructor you can optionally pass a c
 
 ### Example usage with configuration object
 
+index.js
 ```javascript
 import MarkupWriter from 'markupwriter';
 
