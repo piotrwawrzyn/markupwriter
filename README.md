@@ -6,7 +6,7 @@ markupwriter is a javascript library that lets you animate your raw html code an
 
 Before anything, please check out [this example page](https://piotrwawrzyn.github.io/mwexample/ "this example page") I put together to better understand what effect can you achieve by using this library.
 
-## Instalation
+## Installation
 
 ```
 npm install markupwriter
