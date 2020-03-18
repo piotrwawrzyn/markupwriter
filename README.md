@@ -88,11 +88,11 @@ const config = {
 		color: 'red'
 	},
 	onFinish: () => {
-		alert('End of story')
+		alert('End of story');
 	}
 }
 
 const markupWriter = new MarkupWriter(renderedHtmlContainer, rawHtmlContainer, htmlString, config);
 
-markupWriter.start()
+markupWriter.start();
 ```
