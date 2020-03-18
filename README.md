@@ -1,6 +1,6 @@
 # markupwriter &middot; [![npm version](https://badge.fury.io/js/markupwriter.svg)](https://www.npmjs.com/package/markupwriter) [![](https://img.shields.io/bundlephobia/min/markupwriter)](https://www.npmjs.com/package/markupwriter)
 
-markupwriter is a javascript library that lets you animate your raw html code and render it at the same time, just as you were writing it live. It's super lightweight, written in pure JS, using ES6 promises and native asynchronous functions to get the animation effect.
+markupwriter is a javascript library that lets you animate your html code snippet as raw text and render it at the same time, just as if you were writing it live. It's super lightweight, written in pure JS, using ES6 promises and native asynchronous functions to get the animation effect.
 
 ## Example
 
@@ -60,7 +60,7 @@ As a fourth argument to the MarkupWriter constructor you can optionally pass a c
 | cursorOptions.isStatic | boolean | Whether or not cursor should render just once or rerender with every character animated | false
 | pauseBeforeTagOpen | number | Pause in miliseconds before opening new html tag | 500
 | pauseAfterTagClose | number | Pause in miliseconds after closing html tag | 180
-| increasingPace | object | Configuration of increasing animation speed with every new character is the same node | -
+| increasingPace | object | Configuration of increasing animation speed with every new character in the same node | -
 | increasingPace.use | boolean | Whether or not to use this effect at all | true
 | increasingPace.multiplier | number | Multiplier of charInterval, less = faster increase with every new character rendered in the same node | 0.99
 | increasingPace.maximumTimesChange | number | Times speed increase cap | 2.2
