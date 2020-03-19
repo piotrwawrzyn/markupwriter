@@ -1,6 +1,6 @@
 # markupwriter &middot; [![npm version](https://badge.fury.io/js/markupwriter.svg)](https://www.npmjs.com/package/markupwriter) [![](https://img.shields.io/bundlephobia/min/markupwriter)](https://www.npmjs.com/package/markupwriter)
 
-markupwriter is a javascript library that lets you animate your raw html code and render it at the same time, just as you were writing it live. It's super lightweight, written in pure JS, using ES6 promises and native asynchronous functions to get the animation effect.
+markupwriter is a javascript library that lets you animate your html code snippet as raw text and render it at the same time, just as if you were writing it live. It's super lightweight, written in pure JS, using ES6 promises and native asynchronous functions to get the animation effect.
 
 ## Example
 
