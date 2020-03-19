@@ -6,7 +6,9 @@ const config = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'build'),
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'umd',
+    library: 'MarkupWriter',
+    libraryExport: 'default'
   },
   module: {
     rules: [
