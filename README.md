@@ -6,13 +6,16 @@ markupwriter is a javascript library that lets you animate your html code snippe
 
 Before anything, please check out [this example page](https://piotrwawrzyn.github.io/mwexample/ 'this example page') I put together to better understand what effect can you achieve by using this library.
 
-## Installation
+## Installation and usage with npm
 
+*Note: basic webpack configuration is required when using npm with this library.*
+
+### Instalation
 ```
 npm install markupwriter
 ```
 
-## Basic usage
+### Usage
 
 index.html
 
@@ -25,6 +28,9 @@ index.html
   <body>
     <div class="rendered-html"></div>
     <div class="raw-html"></div>
+	
+	<!-- Path to your bundled script -->
+	<script src="./build/bundle.js" type="text/javascript"></script>
   </body>
 </html>
 ```
@@ -51,6 +57,59 @@ const markupWriter = new MarkupWriter(
 
 markupWriter.start();
 ```
+
+Open index.html file in the browser enviroment to see the result.
+
+## Usage with CDN
+
+This approach doesn't require webpack or even an npm project.
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>markupwriter - basic usage</title>
+  </head>
+  <body>
+    <div class="rendered-html"></div>
+    <div class="raw-html"></div>
+	
+	<!-- markupwriter lib -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/markupwriter"
+      type="text/javascript"
+    ></script>
+	
+    <script src="index.js" type="text/javascript"></script>
+  </body>
+</html>
+```
+
+index.js
+```javascript
+const renderedHtmlContainer = document.querySelector('.rendered-html');
+const rawHtmlContainer = document.querySelector('.raw-html');
+const htmlString = `
+<div class="container">
+	<h1>Hey there</h1>
+	<p>This is some cool stuff going on here</p>
+</div>
+`;
+
+/* MarkupWriter is a global object existing in the browser */
+
+const markupWriter = new MarkupWriter(
+  renderedHtmlContainer,
+  rawHtmlContainer,
+  htmlString
+);
+
+markupWriter.start();
+
+```
+
+Open index.html file in the browser enviroment to see the result.
 
 ## Usage with configuration
 
