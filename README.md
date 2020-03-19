@@ -111,7 +111,7 @@ markupWriter.start();
 
 Open index.html file in the browser enviroment to see the result.
 
-## Usage with configuration
+## Configuration
 
 As a fourth argument to the MarkupWriter constructor you can optionally pass a configuration object.
 
