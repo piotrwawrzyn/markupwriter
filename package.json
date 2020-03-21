@@ -1,6 +1,6 @@
 {
   "name": "markupwriter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "markupwriter is a javascript library that lets you animate your html code snippet as raw text and render it at the same time, just as if you were writing it live. It's super lightweight, written in pure JS, using ES6 promises and native asynchronous functions to get the animation effect",
   "main": "./build/index.js",
   "scripts": {
